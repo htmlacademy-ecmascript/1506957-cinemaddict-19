@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Elena Emelyanova](https://up.htmlacademy.ru/ecmascript/19/user/1506957).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Андреев](https://htmlacademy.ru/profile/id812127).
 
 ---
 
