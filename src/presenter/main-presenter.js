@@ -11,7 +11,6 @@ import FilmCardArticle from '../view/film-card-article-view.js';
 import LoadMoreButton from '../view/load-more-button-view.js';
 import FilmsListSectionExtra from '../view/films-list-section-extra-view.js';
 
-const FILMS_COUNT_PER_PAGE = 5;
 const EXTRA_FILMS_COUNT = 2;
 
 export default class MainPresenter{
@@ -23,14 +22,14 @@ export default class MainPresenter{
   filmsListSection = new FilmsListSection();
   filmsListSectionTitle = new FilmsListSectionTitle();
   filmsListContainer = new FilmsListContainer();
-  // filmCard = new FilmCardArticle(); Почему если заношу в переменную, то на 45 строчке не рендериться 5 шт???
+  // filmCard = new FilmCardArticle(); Почему если заношу в переменную, то на 49 строчке не рендериться 5 шт???
   loadMoreButton = new LoadMoreButton();
 
-  constructor({header, main, footer}){
+  constructor({header, main, footer, moviesModel}){
     this.header = header;
     this.main = main;
     this.footer = footer;
-
+    this.moviesModel = moviesModel;
   }
 
   initHeader(){
@@ -38,6 +37,7 @@ export default class MainPresenter{
   }
 
   initMain(){
+    this.movies = [...this.moviesModel.getMovies()];
     render(this.navigationInMain, this.main);
     render(this.filterInMain, this.main);
     render(this.filmsSection, this.main);
@@ -45,8 +45,9 @@ export default class MainPresenter{
     render(this.filmsListSectionTitle, this.filmsListSection.getElement());
     render(this.filmsListContainer, this.filmsListSection.getElement());
 
-    for (let i = 0; i < FILMS_COUNT_PER_PAGE; i++) {
-      render(new FilmCardArticle(), this.filmsListContainer.getElement());
+    for (let i = 0; i < this.movies.length; i++) {
+      render(new FilmCardArticle({movie: this.movies[i]}), this.filmsListContainer.getElement());
+      console.log(movie)
     }
     render(this.loadMoreButton, this.filmsListSection.getElement());
 

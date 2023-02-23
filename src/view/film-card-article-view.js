@@ -1,6 +1,8 @@
 import { createElement } from '../render.js';
 
-function createFilmCardArticleTemplate(){
+function createFilmCardArticleTemplate({movie}){
+  const {filmInfo} = movie;
+  console.log(filmInfo)
   return `
     <article class="film-card">
       <a class="film-card__link">
@@ -25,8 +27,14 @@ function createFilmCardArticleTemplate(){
 }
 
 export default class FilmCardArticle {
+  movie = null;
+
+  constructor({movie}) {
+    this.movie = movie;
+  }
+
   getTemplate(){
-    return createFilmCardArticleTemplate();
+    return createFilmCardArticleTemplate(this.movie);
   }
 
   getElement(){
