@@ -39,6 +39,5 @@ const getCommentsIds = () => {
   return offersIds;
 };
 
-console.log(getCommentsIds())
 
 export { createComments, COMMENTS_COUNT, getCommentsIds };
