@@ -5,13 +5,11 @@ import Filter from '../view/filter-view.js';
 import FilmsStatistics from '../view/films-statistics.js';
 import FilmsSection from '../view/films-section-view.js';
 import FilmsListContainer from '../view/films-list-container.js';
-import FilmsListSection from '../view/films-list-section-view.js';
-import FilmsListSectionTitle from '../view/films-list-section-title-view.js';
 import FilmCardArticle from '../view/film-card-article-view.js';
 import LoadMoreButton from '../view/load-more-button-view.js';
-import FilmsListSectionExtra from '../view/films-list-section-extra-view.js';
-
-const EXTRA_FILMS_COUNT = 2;
+import FilmsListSection from '../view/films-list-section-view.js';
+import FilmsListEmptyContainer from '../view/films-list-empty.js';
+import {TITLES_FOR_EXTRA} from '../const/dev-const/dev-const.js';
 
 export default class MainPresenter{
   profileInHeader = new ProfileView();
@@ -19,17 +17,19 @@ export default class MainPresenter{
   filterInMain = new Filter();
   filmsStatisicOnFooter = new FilmsStatistics();
   filmsSection = new FilmsSection();
+  filmsListEmptyContainer = new FilmsListEmptyContainer();
   filmsListSection = new FilmsListSection();
-  filmsListSectionTitle = new FilmsListSectionTitle();
+  filmsListSectionTopRated = new FilmsListSection(true, TITLES_FOR_EXTRA.TOP_RATED);
+  filmsListSectionMostCommented = new FilmsListSection(true, TITLES_FOR_EXTRA.MOST_COMMENTED);
   filmsListContainer = new FilmsListContainer();
-  // filmCard = new FilmCardArticle(); Почему если заношу в переменную, то на 49 строчке не рендериться 5 шт???
   loadMoreButton = new LoadMoreButton();
 
-  constructor({header, main, footer, moviesModel}){
+  constructor({header, main, footer, moviesModel, commentsModel}){
     this.header = header;
     this.main = main;
     this.footer = footer;
     this.moviesModel = moviesModel;
+    this.commentsModel = commentsModel;
   }
 
   initHeader(){
@@ -38,21 +38,29 @@ export default class MainPresenter{
 
   initMain(){
     this.movies = [...this.moviesModel.getMovies()];
+    this.comments = [...this.commentsModel.getComments()];
     render(this.navigationInMain, this.main);
     render(this.filterInMain, this.main);
-    render(this.filmsSection, this.main);
+    render(this.filmsSection, this.main); //
     render(this.filmsListSection, this.filmsSection.getElement());
-    render(this.filmsListSectionTitle, this.filmsListSection.getElement());
     render(this.filmsListContainer, this.filmsListSection.getElement());
 
+    if (this.movies.length === 0) {
+      render(this.filmsListEmptyContainer, this.filmsListContainer.getElement());
+    }
+
     for (let i = 0; i < this.movies.length; i++) {
-      render(new FilmCardArticle({movie: this.movies[i]}), this.filmsListContainer.getElement());
-      console.log(movie)
+      render(new FilmCardArticle({movie: this.movies[i], comments: this.comments}), this.filmsListContainer.getElement());
     }
     render(this.loadMoreButton, this.filmsListSection.getElement());
 
-    for (let i = 0; i < EXTRA_FILMS_COUNT; i++){
-      render(new FilmsListSectionExtra, this.filmsSection.getElement());
+    render(this.filmsListSectionTopRated, this.filmsSection.getElement());
+    for (let i = 0; i < 2; i++) {
+      render(new FilmCardArticle({movie: this.movies[i], comments: this.comments}), this.filmsListSectionTopRated.getElement());
+    }
+    render(this.filmsListSectionMostCommented, this.filmsSection.getElement());
+    for (let i = 0; i < 2; i++) {
+      render(new FilmCardArticle({movie: this.movies[i], comments: this.comments}), this.filmsListSectionMostCommented.getElement());
     }
   }
 

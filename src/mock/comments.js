@@ -1,25 +1,44 @@
 import { getRandomArrayElement, getRandomInteger } from '../utils/common';
-import { COMMENT_EMOTION, COMMENT_ID_MIN, COMMENT_ID_MAX, AUTHORS_LIST, COMMENTS_LIST} from '../const/comments-const.js';
+import {COMMENT_EMOTION} from '../const/dev-const/dev-const.js';
+import { AUTHORS, COMMENTS} from '../const/mock-const/comments-const.js';
+import { getRandomTime } from '../utils/time.js';
 
-const createComment = () => (
-  {
-    'id': getRandomInteger(COMMENT_ID_MIN, COMMENT_ID_MAX),
-    'author': getRandomArrayElement(AUTHORS_LIST),
-    'comment': getRandomArrayElement(COMMENTS_LIST),
-    'date': '2019-05-11T16:12:32.554Z',
+const COMMENTS_COUNT = 2;
+
+const createComment = (index) => ( {
+  [index]: {
+    'id': index,
+    'author': getRandomArrayElement(AUTHORS),
+    'comment': getRandomArrayElement(COMMENTS),
+    'date': getRandomTime(),
     'emotion': getRandomArrayElement(COMMENT_EMOTION)
   }
+}
 );
+const createComments = Array.from({length: COMMENTS_COUNT}, (_, index) => createComment(index));
+const getRandomComment = getRandomArrayElement(createComments);
 
 const createLocalComment = () => (
   {
-    'comment': '',
-    'emotion': '',
+    'comment': getRandomComment.comment,
+    'emotion': getRandomComment.emotion,
   }
 );
 
-console.log(createLocalComment());
+createLocalComment();
 
-const createMockComments = '';
+const getCommentsIds = () => {
+  const offersIds = [];
 
-export { createMockComments };
+  while (offersIds.length < 2) {
+    const currentElement = getRandomInteger(0, createComments.length);
+    if (!offersIds.includes(currentElement)) {
+      offersIds.push(currentElement);
+    }
+  }
+  return offersIds;
+};
+
+console.log(getCommentsIds())
+
+export { createComments, COMMENTS_COUNT, getCommentsIds };

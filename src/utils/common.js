@@ -17,16 +17,6 @@ const getRandomInteger = (min, max) => {
 
 const getRandomIntegerWithDot = (min, max) => (Math.random() * (max - min) + min).toFixed(1);
 
-const renameKeysToCamel = (obj) => Object
-  .entries(obj)
-  .reduce((acc, [key, val]) => {
-    const modifiedKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-    return ({
-      ...acc,
-      ...{ [modifiedKey]: val },
-    });
-  }, {});
-
 const renameSpacetoDashAndLowerCase = (str) => (str.replace(/ /g, '-')).toLowerCase();
 
-export {getRandomArrayElement, getRandomElementsArray, getRandomInteger, renameKeysToCamel, renameSpacetoDashAndLowerCase, getRandomIntegerWithDot};
+export {getRandomArrayElement, getRandomElementsArray, getRandomInteger, renameSpacetoDashAndLowerCase, getRandomIntegerWithDot};

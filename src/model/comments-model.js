@@ -1,7 +1,7 @@
-import { createMockComments } from '../mock/comments.js';
+import { createComments } from '../mock/comments.js';
 
-export default class MoviesModel {
-  comments = createMockComments;
+export default class CommentsModel {
+  comments = createComments;
 
   getComments() {
     return this.comments;

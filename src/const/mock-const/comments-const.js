@@ -1,9 +1,7 @@
-const COMMENT_EMOTION = ['smile', 'sleeping', 'puke', 'angry'];
-
 const COMMENT_ID_MIN = 1;
-const COMMENT_ID_MAX = 100;
+const COMMENT_ID_MAX = 10;
 
-const AUTHORS_LIST = [
+const AUTHORS = [
   'Alexey Grey',
   'Johnny Brown',
   'Alishia Stew',
@@ -11,7 +9,7 @@ const AUTHORS_LIST = [
   'Genry Stone'
 ];
 
-const COMMENTS_LIST = [
+const COMMENTS = [
   'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
   'The case when the more time passes after watching, the worse it becomes.',
   'I watched this movie yesterday and it\'s hard for me to give it an unambiguous assessment.',
@@ -21,4 +19,4 @@ const COMMENTS_LIST = [
   'The film is of genuine interest. It is organic in every way. By the quality of the shooting, by the fullness of the plot and by the acting. I do not regret that I spent time and money. It was worth it.'
 ];
 
-export { COMMENT_EMOTION, COMMENT_ID_MIN, COMMENT_ID_MAX, AUTHORS_LIST, COMMENTS_LIST};
+export { COMMENT_ID_MIN, COMMENT_ID_MAX, AUTHORS, COMMENTS };
