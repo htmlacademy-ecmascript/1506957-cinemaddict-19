@@ -12,7 +12,9 @@ import FilmsListEmptyContainer from '../view/films-list-empty.js';
 import {TITLES_FOR_EXTRA} from '../const/dev-const/dev-const.js';
 import PopupView from '../view/popup-view.js';
 
-export default class MainPresenter{
+const FILMS_COUNT_PER_STEP = 5;
+
+export default class MainPresenter {
   #profileInHeader = new ProfileView();
   #navigationInMain = new NavigationView();
   #filterInMain = new Filter();
@@ -23,7 +25,8 @@ export default class MainPresenter{
   #filmsListSectionTopRated = new FilmsListSection(true, TITLES_FOR_EXTRA.TOP_RATED);
   #filmsListSectionMostCommented = new FilmsListSection(true, TITLES_FOR_EXTRA.MOST_COMMENTED);
   #filmsListContainer = new FilmsListContainer();
-  #loadMoreButton = new LoadMoreButton();
+  #loadMoreButton;
+  #renderedFilmsCount = FILMS_COUNT_PER_STEP;
   #header;
   #main;
   #footer;
@@ -59,11 +62,31 @@ export default class MainPresenter{
       render(this.#filmsListEmptyContainer, this.#filmsListContainer.element);
     }
 
-    for (let i = 0; i < this.#films.length; i++) {
+    for (let i = 0; i < Math.min(this.#films.length, FILMS_COUNT_PER_STEP); i++) {
       this.#renderFilmCard({film: this.#films[i]});
     }
-    render(this.#loadMoreButton, this.#filmsListSection.element);
+
+    if (this.#films.length > FILMS_COUNT_PER_STEP) {
+      this.#loadMoreButton = new LoadMoreButton();
+      render(this.#loadMoreButton, this.#filmsListSection.element);
+
+      this.#loadMoreButton.element.addEventListener('click', this.#loadMoreButtonClickHandler);
+    }
   }
+
+  #loadMoreButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#films
+      .slice(this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP)
+      .forEach((film) => this.#renderFilmCard({film}));
+
+    this.#renderedFilmsCount += FILMS_COUNT_PER_STEP;
+
+    if (this.#renderedFilmsCount >= this.#films.length) {
+      this.#loadMoreButton.element.remove();
+      this.#loadMoreButton.removeElement();
+    }
+  };
 
   #renderFilmCard(film) {
     const filmComponent = new FilmCard({film});
