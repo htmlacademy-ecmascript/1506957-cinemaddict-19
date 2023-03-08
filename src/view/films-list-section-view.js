@@ -2,32 +2,32 @@ import { createElement } from '../render.js';
 
 function createFilmsListSectionTemplate(isExtra, title){
   return `<section class="films-list ${isExtra ? 'films-list--extra' : ''}">
-  <h2 class="films-list__title ${isExtra ? '' : 'visually-hidden'}">${title || 'All movies. Upcoming'}</h2>
+  <h2 class="films-list__title ${isExtra ? '' : 'visually-hidden'}">${title || 'All films. Upcoming'}</h2>
   </section>`;
 }
 
 export default class FilmsListSection {
-  element = null;
-  isExtra = null;
-  title = null;
+  #element = null;
+  #isExtra = null;
+  #title = null;
 
   constructor(isExtra, title) {
-    this.isExtra = isExtra;
-    this.title = title;
+    this.#isExtra = isExtra;
+    this.#title = title;
   }
 
-  getTemplate(){
-    return createFilmsListSectionTemplate(this.isExtra, this.title);
+  get template(){
+    return createFilmsListSectionTemplate(this.#isExtra, this.#title);
   }
 
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
+  get element(){
+    if(!this.#element){
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement(){
-    this.element = null;
+    this.#element = null;
   }
 }

@@ -3,11 +3,10 @@ import { durationTime, getRanomReleaseTime, getRandomTime } from '../utils/time.
 import { FILM_TITLE, TOTAL_FILM_RATING_MIN, TOTAL_FILM_RATING_MAX, POSTERS, AGE_RATING, DICRECTOR_OF_FILM, WRITERS_OF_FILM, ACTORS_OF_FILM, RELEASE_COUNTRY, DURATION_TIME_MIN, DURATION_TIME_MAX, GENRES, DESCRIPTIONS, DESCRIPTION_LENGTH_MIN, DESCRIPTION_LENGTH_MAX } from '../const/mock-const/films-const.js';
 import { getCommentsIds } from './comments.js';
 
-const MOVIE_COUNT = 5;
+const FILM_COUNT = 5;
 const GENRE_MAX_COUNT = 3;
-// const findID = comments.find((item) => item.id === movieId);
 
-const createMovie = (index) => (
+const createFilms = (index) => (
   {
     'id': index + 1,
     'comments': getCommentsIds(),
@@ -37,7 +36,7 @@ const createMovie = (index) => (
   }
 );
 
-const createMockMovies = Array.from({ length: MOVIE_COUNT }, (_, index) => createMovie(index));
+const createMockFilms = Array.from({ length: FILM_COUNT }, (_, index) => createFilms(index));
 
-export { createMockMovies };
+export { createMockFilms };
 

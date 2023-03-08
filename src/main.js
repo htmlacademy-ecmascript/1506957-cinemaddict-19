@@ -1,17 +1,19 @@
 import MainPresenter from './presenter/main-presenter.js';
-import MoviesModel from './model/movies-model.js';
+import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
 
-const headerSiteElement = document.querySelector('.header');
-const mainSiteElement = document.querySelector('.main');
+const headerElement = document.querySelector('.header');
+const mainElement = document.querySelector('.main');
+const bodyElement = document.querySelector('body');
 const footerElement = document.querySelector('.footer__statistics');
-const moviesModel = new MoviesModel();
+const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 const mainPresenter = new MainPresenter({
-  header: headerSiteElement,
-  main: mainSiteElement,
+  header: headerElement,
+  main: mainElement,
   footer: footerElement,
-  moviesModel,
+  body: bodyElement,
+  filmsModel,
   commentsModel
 });
 

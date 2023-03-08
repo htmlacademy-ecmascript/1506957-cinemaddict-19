@@ -12,7 +12,7 @@ const AUTHORS = [
 const COMMENTS = [
   'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
   'The case when the more time passes after watching, the worse it becomes.',
-  'I watched this movie yesterday and it\'s hard for me to give it an unambiguous assessment.',
+  'I watched this film yesterday and it\'s hard for me to give it an unambiguous assessment.',
   'This is not a simple film, but a real masterpiece.',
   'I probably didn\'t understand a lot, but I definitely wouldn\'t watch the film again, just as I wouldn\'t recommend it to anyone for viewing.',
   'The film is a solid nine, I advise all novice creators, writers, artists, musicians and those who are looking for their own path.',

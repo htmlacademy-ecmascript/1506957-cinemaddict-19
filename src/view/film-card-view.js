@@ -1,7 +1,7 @@
 import { createElement } from '../render.js';
 
-function createFilmCardArticleTemplate({movie, comments}){
-  const {filmInfo, userDetails} = movie;
+function createFilmCardTemplate({film}){
+  const {filmInfo, userDetails, comments} = film;
   const commentsLength = comments.length;
 
   const isActiveStatus = (status) => status ? 'film-card__controls-item--active' : '';
@@ -29,27 +29,26 @@ function createFilmCardArticleTemplate({movie, comments}){
   `;
 }
 
-export default class FilmCardArticle {
-  movie = null;
-  comments = [];
+export default class FilmCard {
+  #element = null;
+  #film = null;
 
-  constructor({movie, comments}) {
-    this.movie = movie;
-    this.comments = comments;
+  constructor({film}) {
+    this.#film = film;
   }
 
-  getTemplate(){
-    return createFilmCardArticleTemplate({movie: this.movie, comments: this.comments});
+  get template(){
+    return createFilmCardTemplate(this.#film);
   }
 
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
+  get element(){
+    if(!this.#element){
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement(){
-    this.element = null;
+    this.#element = null;
   }
 }
