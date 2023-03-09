@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const MOVIES_COUNT = 100;
 
@@ -8,21 +8,10 @@ function createFilmStatisticsTemplate(){
 `;
 }
 
-export default class FilmsStatistics {
+export default class FilmsStatistics extends AbstractView {
   #element = null;
 
   get template(){
     return createFilmStatisticsTemplate();
-  }
-
-  get element(){
-    if(!this.#element){
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement(){
-    this.#element = null;
   }
 }
