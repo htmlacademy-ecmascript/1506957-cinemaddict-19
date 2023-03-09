@@ -12,4 +12,5 @@ export default class LoadingFilms extends AbstractView {
   get template(){
     return createLoadingFilmsTemplate();
   }
+
 }

@@ -6,7 +6,7 @@ function createLoadMoreButtonTemplate() {
   `;
 }
 
-export default class LoadMoreButton extends AbstractView {
+export default class LoadMoreButton extends AbstractView{
   #element = null;
 
   get template(){
