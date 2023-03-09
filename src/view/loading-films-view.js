@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createLoadingFilmsTemplate() {
   return `
@@ -6,21 +6,10 @@ function createLoadingFilmsTemplate() {
   `;
 }
 
-export default class LoadingFilms {
+export default class LoadingFilms extends AbstractView {
   #element = null;
 
   get template(){
     return createLoadingFilmsTemplate();
-  }
-
-  get element(){
-    if(!this.#element){
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement(){
-    this.#element = null;
   }
 }
