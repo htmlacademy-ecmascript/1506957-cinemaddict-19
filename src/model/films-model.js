@@ -1,7 +1,7 @@
-import { createMockFilms } from '../mock/films.js';
+import { mockFilms } from '../mock/films.js';
 
 export default class FilmsModel {
-  #films = createMockFilms;
+  #films = mockFilms;
 
   get films() {
     return this.#films;

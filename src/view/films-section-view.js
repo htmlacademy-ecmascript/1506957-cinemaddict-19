@@ -1,15 +1,15 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createFilmsSectionTemplate(){
+function createFilmsSectionViewTemplate(){
   return `
   <section class="films"></section>
 `;
 }
 
-export default class FilmsSection extends AbstractView {
+export default class FilmsSectionView extends AbstractView {
   #element = null;
 
   get template(){
-    return createFilmsSectionTemplate();
+    return createFilmsSectionViewTemplate();
   }
 }

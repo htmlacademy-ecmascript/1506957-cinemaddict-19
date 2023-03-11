@@ -1,15 +1,27 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createLoadMoreButtonTemplate() {
+function createLoadMoreButtonViewTemplate() {
   return `
   <button class="films-list__show-more">Show more</button>
   `;
 }
 
-export default class LoadMoreButton extends AbstractView{
+export default class LoadMoreButtonView extends AbstractView {
+  #handlerClick = null;
   #element = null;
 
-  get template(){
-    return createLoadMoreButtonTemplate();
+  constructor({onClick}) {
+    super();
+    this.#handlerClick = onClick;
+    this.element.addEventListener('click', this.#clickHandler);
   }
+
+  get template(){
+    return createLoadMoreButtonViewTemplate();
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handlerClick();
+  };
 }

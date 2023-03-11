@@ -1,44 +1,39 @@
 /* eslint-disable no-unused-expressions */
-import { createElement } from '../render.js';
-import { createComments } from '../mock/comments.js';
+import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
+import { COMMENT_EMOTION } from '../const/const.js';
+import { getRandomReleaseDate } from '../utils/time.js';
 
-function createPopupTemplate({film}){
-  const {filmInfo, comments} = film;
+const renderFilmDetailsEmoji = COMMENT_EMOTION.map((emoji) =>
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+  <label class="film-details__emoji-label" for="emoji-${emoji}">
+  <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+  </label>`).join('');
+
+function createPopupTemplate({film, comments}){
+  const {filmInfo} = film;
   const filmGenres = filmInfo.genre[0];
 
-  const renderComments = () => { // Почему в консоль логе renderComments() 5 шт, а отрисовывается 1. Должно быть 2 комментария ??
+  const renderComments = () => {
+    const commentsTemplate = [];
     for (const commentID of film.comments) {
-      return `<li class="film-details__comment">
+      commentsTemplate.push(`<li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${createComments[commentID].emotion}.png" width="55" height="55" alt="emoji-${createComments[commentID].emotion}">
+        <img src="./images/emoji/${comments[commentID].emotion}.png" width="55" height="55" alt="emoji-${comments[commentID].emotion}">
       </span>
       <div>
-        <p class="film-details__comment-text">${createComments[commentID].comment}</p>
+        <p class="film-details__comment-text">${comments[commentID].comment}</p>
         <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${createComments[commentID].author}</span>
-          <span class="film-details__comment-day">${createComments[commentID].date}</span>
+          <span class="film-details__comment-author">${comments[commentID].author}</span>
+          <span class="film-details__comment-day">${comments[commentID].date}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
-      </li>`;
+      </li>`);
     }
+    return commentsTemplate.join('');
   };
 
-  const renderFilmDetailsPoster = () => `<div class="film-details__poster">
-    <img class="film-details__poster-img" src="./${filmInfo.poster}" alt="">
-
-    <p class="film-details__age">${filmInfo.ageRating}</p>
-  </div>`;
-  const renderFilmDetailsInfo = () => `<div class="film-details__info-head">
-  <div class="film-details__title-wrap">
-    <h3 class="film-details__title">${filmInfo.title}</h3>
-    <p class="film-details__title-original">${filmInfo.alternativeTitle}</p>
-  </div>
-
-  <div class="film-details__rating">
-    <p class="film-details__total-rating">${filmInfo.totalRating}</p>
-  </div>
-  </div>`;
   const renderGenreTemplate = (genres) => (
     `<td class="film-details__term">${
       genres.length > 1 ? 'Genres' : 'Genre'
@@ -48,43 +43,55 @@ function createPopupTemplate({film}){
       `<span class="film-details__genre">${genre}</span>`
     )).join('')}</td>`
   );
-  const renderFIlmDetailsTable = () => `<tr class="film-details__row">
-  <td class="film-details__term">Director</td>
-  <td class="film-details__cell">${filmInfo.director}</td>
-  </tr>
-  <tr class="film-details__row">
-  <td class="film-details__term">Writers</td>
-  <td class="film-details__cell">${filmInfo.writers}</td>
-  </tr>
-  <tr class="film-details__row">
-  <td class="film-details__term">Actors</td>
-  <td class="film-details__cell">${filmInfo.actors}</td>
-  </tr>
-  <tr class="film-details__row">
-  <td class="film-details__term">Release Date</td>
-  <td class="film-details__cell">${filmInfo.release.date}</td>
-  </tr>
-  <tr class="film-details__row">
-  <td class="film-details__term">Duration</td>
-  <td class="film-details__cell">${filmInfo.duration}</td>
-  </tr>
-  <tr class="film-details__row">
-  <td class="film-details__term">Country</td>
-  <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
-  </tr>
-  <tr class="film-details__row">
-  ${renderGenreTemplate(filmGenres)}
-  </tr>`;
+
   const renderTopContainer = () => `<div class="film-details__top-container">
   <div class="film-details__close">
     <button class="film-details__close-btn" type="button">close</button>
   </div>
   <div class="film-details__info-wrap">
-        ${renderFilmDetailsPoster()}
+    <div class="film-details__poster">
+      <img class="film-details__poster-img" src="./${filmInfo.poster}" alt="">
+    <p class="film-details__age">${filmInfo.ageRating}</p>
+  </div>
     <div class="film-details__info">
-        ${renderFilmDetailsInfo()}
+    <div class="film-details__info-head">
+    <div class="film-details__title-wrap">
+      <h3 class="film-details__title">${filmInfo.title}</h3>
+      <p class="film-details__title-original">${filmInfo.alternativeTitle}</p>
+    </div>
+
+    <div class="film-details__rating">
+      <p class="film-details__total-rating">${filmInfo.totalRating}</p>
+    </div>
+    </div>
       <table class="film-details__table">
-        ${renderFIlmDetailsTable()}
+      <tr class="film-details__row">
+      <td class="film-details__term">Director</td>
+      <td class="film-details__cell">${filmInfo.director}</td>
+      </tr>
+      <tr class="film-details__row">
+      <td class="film-details__term">Writers</td>
+      <td class="film-details__cell">${filmInfo.writers}</td>
+      </tr>
+      <tr class="film-details__row">
+      <td class="film-details__term">Actors</td>
+      <td class="film-details__cell">${filmInfo.actors}</td>
+      </tr>
+      <tr class="film-details__row">
+      <td class="film-details__term">Release Date</td>
+      <td class="film-details__cell">${dayjs(getRandomReleaseDate).format('DD MMMM YYYY')}</td>
+      </tr>
+      <tr class="film-details__row">
+      <td class="film-details__term">Duration</td>
+      <td class="film-details__cell">${filmInfo.duration}</td>
+      </tr>
+      <tr class="film-details__row">
+      <td class="film-details__term">Country</td>
+      <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
+      </tr>
+      <tr class="film-details__row">
+      ${renderGenreTemplate(filmGenres)}
+      </tr>
       </table>
 
       <p class="film-details__film-description">
@@ -99,6 +106,7 @@ function createPopupTemplate({film}){
     <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
   </section>
 </div>`;
+
   const renderBottomContainer = () => `<div class="film-details__bottom-container">
   <section class="film-details__comments-wrap">
     <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
@@ -113,24 +121,7 @@ function createPopupTemplate({film}){
       </label>
 
       <div class="film-details__emoji-list">
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-        <label class="film-details__emoji-label" for="emoji-smile">
-          <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-        </label>
-
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-        <label class="film-details__emoji-label" for="emoji-sleeping">
-          <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-        </label>
-
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-        <label class="film-details__emoji-label" for="emoji-puke">
-          <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-        </label>
-
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-        <label class="film-details__emoji-label" for="emoji-angry">
-          <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+        ${renderFilmDetailsEmoji}
         </label>
       </div>
     </form>
@@ -145,26 +136,28 @@ function createPopupTemplate({film}){
   `;
 }
 
-export default class PopupView {
+export default class PopupView extends AbstractView{
   #element = null;
   #film = null;
+  #comments = null;
+  #handlerClosePopup = null;
 
-  constructor({film}){
+  constructor({film, comments, onEscClick}){
+    super();
     this.#film = film;
+    this.#comments = comments;
+    this.#handlerClosePopup = onEscClick;
+
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closePopupHandler);
   }
 
   get template(){
-    return createPopupTemplate(this.#film);
+    return createPopupTemplate({film: this.#film, comments: this.#comments});
   }
 
-  get element(){
-    if(!this.#element){
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  #closePopupHandler = (evt) => {
+    evt.preventDefault();
+    this.#handlerClosePopup();
+  };
 
-  removeElement(){
-    this.#element = null;
-  }
 }

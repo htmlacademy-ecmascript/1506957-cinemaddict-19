@@ -1,14 +1,13 @@
 import AbstractView from '../framework/view/abstract-view.js';
-
-const MOVIES_COUNT = 100;
+import { FILMS_COUNT } from '../mock/films.js';
 
 function createFilmStatisticsTemplate(){
   return `
-  <p>${MOVIES_COUNT} films inside</p>
+  <p>${FILMS_COUNT} films inside</p>
 `;
 }
 
-export default class FilmsStatistics extends AbstractView {
+export default class FilmsStatisticsView extends AbstractView {
   #element = null;
 
   get template(){

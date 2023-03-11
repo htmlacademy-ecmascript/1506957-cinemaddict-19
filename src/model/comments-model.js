@@ -1,7 +1,7 @@
-import { createComments } from '../mock/comments.js';
+import { comments } from '../mock/comments.js';
 
 export default class CommentsModel {
-  #comments = createComments;
+  #comments = comments;
 
   get comments() {
     return this.#comments;

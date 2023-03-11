@@ -13,10 +13,9 @@ const mainPresenter = new MainPresenter({
   main: mainElement,
   footer: footerElement,
   body: bodyElement,
+  popupContainer: bodyElement,
   filmsModel,
   commentsModel
 });
 
-mainPresenter.initHeader();
-mainPresenter.initMain();
-mainPresenter.initFooter();
+mainPresenter.init();

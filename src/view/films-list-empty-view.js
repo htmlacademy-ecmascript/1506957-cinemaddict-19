@@ -6,7 +6,7 @@ function createFilmsListEmptyTemplate(){
   `;
 }
 
-export default class FilmsListEmptyContainer extends AbstractView {
+export default class FilmsListEmptyContainerView extends AbstractView {
   #element = null;
 
   get template(){

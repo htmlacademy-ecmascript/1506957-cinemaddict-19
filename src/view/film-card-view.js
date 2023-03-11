@@ -1,9 +1,7 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-function createFilmCardTemplate({film}){
+function createFilmCardViewTemplate({film}){
   const {filmInfo, userDetails, comments} = film;
-  const commentsLength = comments.length;
-
   const isActiveStatus = (status) => status ? 'film-card__controls-item--active' : '';
 
   return `
@@ -18,7 +16,7 @@ function createFilmCardTemplate({film}){
         </p>
         <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${filmInfo.description}</p>
-        <span class="film-card__comments">${commentsLength} comment${commentsLength > 1 ? 's' : ''}</span>
+        <span class="film-card__comments">${comments.length} comment${comments.length > 1 ? 's' : ''}</span>
       </a>
       <div class="film-card__controls">
         <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${isActiveStatus(userDetails.watchlist)}" type="button">Add to watchlist</button>
@@ -29,26 +27,26 @@ function createFilmCardTemplate({film}){
   `;
 }
 
-export default class FilmCard {
+export default class FilmCardView extends AbstractView {
   #element = null;
   #film = null;
+  #handleCardClick = null;
 
-  constructor({film}) {
+  constructor({film, onCardClick}) {
+    super();
     this.#film = film;
+
+    this.#handleCardClick = onCardClick;
+
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#openPopupClickHandler);
   }
 
   get template(){
-    return createFilmCardTemplate(this.#film);
+    return createFilmCardViewTemplate({film: this.#film});
   }
 
-  get element(){
-    if(!this.#element){
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement(){
-    this.#element = null;
-  }
+  #openPopupClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleCardClick();
+  };
 }

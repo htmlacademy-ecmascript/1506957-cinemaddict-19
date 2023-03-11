@@ -1,8 +1,8 @@
-const TITLES_FOR_EXTRA = {
+const EXTRA_TITLES = {
   TOP_RATED: 'Top rated',
   MOST_COMMENTED: 'Most commented'
 };
 const COMMENT_EMOTION = ['smile', 'sleeping', 'puke', 'angry'];
 
 
-export {TITLES_FOR_EXTRA, COMMENT_EMOTION};
+export {EXTRA_TITLES, COMMENT_EMOTION};
