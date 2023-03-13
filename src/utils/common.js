@@ -19,8 +19,8 @@ const getRandomIntegerWithDot = (min, max) => (Math.random() * (max - min) + min
 
 const renameSpacetoDashAndLowerCase = (str) => (str.replace(/ /g, '-')).toLowerCase();
 
-function isTaskInWatchlist(inWatchlist){
-  return ;
-}
+// function isTaskInWatchlist(inWatchlist){
+//   return ;
+// }
 
 export {getRandomArrayElement, getRandomElementsArray, getRandomInteger, renameSpacetoDashAndLowerCase, getRandomIntegerWithDot};
