@@ -1,24 +1,16 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-function createLoadingFilmsTemplate() {
+function createLoadingFilmsViewTemplate() {
   return `
   <h2 class="films-list__title">Loading...</h2>
   `;
 }
+// пока что оставила и не завела отдельную вью именно под h2, потому что не знаю, как описать процесс loading
+export default class LoadingFilmsView extends AbstractView {
+  #element = null;
 
-export default class LoadingFilms {
-  getTemplate(){
-    return createLoadingFilmsTemplate();
+  get template(){
+    return createLoadingFilmsViewTemplate();
   }
 
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement(){
-    this.element = null;
-  }
 }
