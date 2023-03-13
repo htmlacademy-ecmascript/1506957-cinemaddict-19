@@ -9,12 +9,13 @@ import LoadMoreButtonView from '../view/load-more-button-view.js';
 import FilmsListSectionView from '../view/films-list-section-view.js';
 import FilmsListEmptyContainerView from '../view/films-list-empty-view.js';
 import PopupView from '../view/popup-view.js';
+import generateFilter from '../mock/filters.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
 export default class MainPresenter {
   #profileComponent = new ProfileView();
-  #filterComponent = new FilterView();
+  #filterComponent = new FilterView(); // Передать в фильтерВью generateFilter??
   #sortComponent = new SortView();
   #filmsStatistic = new FilmsStatisticsView();
   #filmsSection = new FilmsSectionView();
