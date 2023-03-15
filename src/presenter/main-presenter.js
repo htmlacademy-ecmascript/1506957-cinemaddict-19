@@ -10,7 +10,6 @@ import FilmsListSectionView from '../view/films-list-section-view.js';
 import FilmsListEmptyContainerView from '../view/films-list-empty-view.js';
 import PopupView from '../view/popup-view.js';
 import { generateFilter } from '../mock/filters.js';
-import { generateSort } from '../mock/sorts.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
