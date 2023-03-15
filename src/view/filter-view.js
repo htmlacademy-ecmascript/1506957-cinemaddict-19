@@ -1,28 +1,33 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-function createFilterTemplate() {
+function createFilterItemTemplate(filter, isChecked){
+  const {name, count} = filter;
   return `
-  <ul class="sort">
-  <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-  <li><a href="#" class="sort__button">Sort by date</a></li>
-  <li><a href="#" class="sort__button">Sort by rating</a></li>
-</ul>
+  <a href="#${name}" class="main-navigation__item main-navigation__item--${isChecked ? 'active' : 'count'}">${name === 'All' ? `${name} movies` : `${name} <span class="main-navigation__item-count">${count}</span>`}</a>`;
+}
+
+function createFilterTemplate(filterItems){
+  const filterItemsTemplate = filterItems
+    .map((filter, index) => createFilterItemTemplate(filter, index === 0))
+    .join('');
+  return `
+  <nav class="main-navigation">
+  ${filterItemsTemplate}
+</nav>
   `;
 }
 
-export default class Filter {
-  getTemplate(){
-    return createFilterTemplate();
+export default class FilterView extends AbstractView {
+  #element = null;
+  #filter = null;
+
+
+  constructor(filter){
+    super();
+    this.#filter = filter;
   }
 
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement(){
-    this.element = null;
+  get template() {
+    return createFilterTemplate(this.#filter);
   }
 }
