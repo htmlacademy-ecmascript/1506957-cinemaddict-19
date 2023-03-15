@@ -6,10 +6,10 @@ const EXTRA_TITLES = {
 const COMMENT_EMOTION = ['smile', 'sleeping', 'puke', 'angry'];
 
 const FilterType = {
-  ALL: 'all',
+  ALL: 'All',
   WATCHLIST: 'Watchlist',
-  HISTORY: 'history',
-  FAVORITES: 'favorites',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites',
 };
 
 const SortType = {

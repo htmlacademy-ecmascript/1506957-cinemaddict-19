@@ -1,12 +1,12 @@
-import {filter} from '../utils/filter.js';
+import { filter } from '../utils/filter.js';
 
-function generateFilter(movie) {
+function generateFilter(film) {
   return Object.entries(filter).map(
     ([filterName, filterMovie]) => ({
       name: filterName,
-      count: filterMovie(movie).length
+      count: filterMovie(film).length
     })
   );
 }
 
-export {generateFilter};
+export { generateFilter };

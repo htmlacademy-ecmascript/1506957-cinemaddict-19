@@ -79,7 +79,7 @@ function createPopupTemplate({film, comments}){
       </tr>
       <tr class="film-details__row">
       <td class="film-details__term">Release Date</td>
-      <td class="film-details__cell">${dayjs(getRandomReleaseDate).format('DD MMMM YYYY')}</td>
+      <td class="film-details__cell">${dayjs(getRandomReleaseDate()).format('DD MMMM YYYY')}</td>
       </tr>
       <tr class="film-details__row">
       <td class="film-details__term">Duration</td>

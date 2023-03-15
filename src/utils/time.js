@@ -13,8 +13,8 @@ const durationTime = (duration) => {
   }
   return `${hours}H ${minutes}M`;
 };
-const getRandomReleaseDate = `${getRandomInteger(2019, 2023)}-${getRandomInteger(1, 12)}-${getRandomInteger(1, 31)}`;
-const getRandomReleaseTime = () => `${getRandomReleaseDate}+T${getRandomInteger(0, 23)}:${getRandomInteger(0,59)}:${getRandomInteger(0, 59)}.000Z`;
+const getRandomReleaseDate = () =>`${getRandomInteger(2019, 2023)}-${getRandomInteger(1, 12)}-${getRandomInteger(1, 31)}`;
+const getRandomReleaseTime = () => `${getRandomReleaseDate()}+T${getRandomInteger(0, 23)}:${getRandomInteger(0,59)}:${getRandomInteger(0, 59)}.000Z`;
 
 const getRandomTime = () => `${getRandomInteger(2019, 2023)}-${getRandomInteger(1, 12)}-${getRandomInteger(1, 31)}T${getRandomInteger(0, 23)}:${getRandomInteger(0,59)}:${getRandomInteger(0, 59)}.554Z`;
 

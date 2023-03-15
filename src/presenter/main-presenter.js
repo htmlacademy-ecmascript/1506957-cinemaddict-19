@@ -9,14 +9,13 @@ import LoadMoreButtonView from '../view/load-more-button-view.js';
 import FilmsListSectionView from '../view/films-list-section-view.js';
 import FilmsListEmptyContainerView from '../view/films-list-empty-view.js';
 import PopupView from '../view/popup-view.js';
-// import generateFilter from '../mock/filters.js';
+import { generateFilter } from '../mock/filters.js';
+import { generateSort } from '../mock/sorts.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
 export default class MainPresenter {
   #profileComponent = new ProfileView();
-  #filterComponent = new FilterView(); // Передать в фильтерВью generateFilter??
-  #sortComponent = new SortView();
   #filmsStatistic = new FilmsStatisticsView();
   #filmsSection = new FilmsSectionView();
   #filmsListEmptyContainer = new FilmsListEmptyContainerView();
@@ -46,8 +45,8 @@ export default class MainPresenter {
 
     this.#films = [...this.#filmsModel.films];
     this.#comments = [...this.#commentsModel.comments];
-    render(this.#filterComponent, this.#main);
-    render(this.#sortComponent, this.#main);
+    render(new FilterView(generateFilter(this.#films)), this.#main);
+    render(new SortView(), this.#main);
     render(this.#filmsSection, this.#main);
     render(this.#filmsListSection, this.#filmsSection.element);
 
@@ -56,14 +55,9 @@ export default class MainPresenter {
       return;
     }
 
-    for (let i = 0; i < Math.min(this.#films.length, FILMS_COUNT_PER_STEP); i++) {
+    for (let i = 0; i < Math.min(this.#films.length, FILMS_COUNT_PER_STEP); i++) { // ВЫынести маф мин
       this.#renderFilmCardView({film: this.#films[i], comments: this.#comments});
     }
-
-
-    // for (const film of this.#films) {
-    //   this.#renderFilmCardView({film: film, comments: this.#comments});
-    // }
 
     if (this.#films.length > FILMS_COUNT_PER_STEP) {
       this.#loadMoreButton = new LoadMoreButtonView({
