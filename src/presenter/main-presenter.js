@@ -88,7 +88,7 @@ export default class MainPresenter {
     render(this.#filmsListSectionComponent, this.#filmsSectionComponent.element);
 
     for (let i = 0; i < minLengthPerStep; i++) {
-      (console.log(this.#films))
+      // (console.log(this.#films))
       this.#renderFilmCard(this.#films[i]); // здесь в косоли undefind??
       // console.log(this.#renderFilmCard(this.#films[i]));
     }

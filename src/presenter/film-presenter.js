@@ -1,4 +1,4 @@
-import { replace, render, remove } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 
@@ -19,7 +19,7 @@ export default class FilmPresenter {
   init(film, comments){
     this.#film = film;
     this.#comments = comments;
-// console.log(this.#film, this.#comments)
+    // console.log(this.#film, this.#comments)
     this.#filmFilmCardComponent = new FilmCardView({
       film: this.#film,
       onCardClick: () => {
