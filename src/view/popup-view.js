@@ -147,7 +147,6 @@ export default class PopupView extends AbstractView{
     this.#film = film;
     this.#comments = comments;
     this.#handlerClosePopup = onEscClick;
-
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closePopupHandler);
   }
 

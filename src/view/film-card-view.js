@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createFilmCardViewTemplate({film}){
+function createFilmCardViewTemplate(film){
   const {filmInfo, userDetails, comments} = film;
   const isActiveStatus = (status) => status ? 'film-card__controls-item--active' : '';
 
@@ -30,19 +30,18 @@ function createFilmCardViewTemplate({film}){
 export default class FilmCardView extends AbstractView {
   #element = null;
   #film = null;
+  #comments = null;
   #handleCardClick = null;
 
   constructor({film, onCardClick}) {
     super();
     this.#film = film;
-
     this.#handleCardClick = onCardClick;
-
     this.element.querySelector('.film-card__link').addEventListener('click', this.#openPopupClickHandler);
   }
 
   get template(){
-    return createFilmCardViewTemplate({film: this.#film});
+    return createFilmCardViewTemplate(this.#film);
   }
 
   #openPopupClickHandler = (evt) => {
