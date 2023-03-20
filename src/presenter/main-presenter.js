@@ -9,6 +9,7 @@ import FilmsListSectionView from '../view/films-list-section-view.js';
 import FilmsListEmptyContainerView from '../view/films-list-empty-view.js';
 import { generateFilter } from '../mock/filters.js';
 import FilmPresenter from './film-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -29,6 +30,7 @@ export default class MainPresenter {
   #commentsModel = null;
   #films = [];
   #comments = [];
+  #filmPresenters = new Map();
 
   constructor({header, main, footer, body, filmsModel, commentsModel}){
     this.#header = header;
@@ -52,6 +54,11 @@ export default class MainPresenter {
     if (this.#renderedFilmsCount >= this.#films.length) {
       remove(this.#loadMoreButtonComponent.element);
     }
+  };
+
+  #handleFilmChange = (updatedFilm) => {
+    this.#films = updateItem(this.#films, updatedFilm);
+    this.#filmPresenters.get(updatedFilm.id).init(updatedFilm);
   };
 
   #renderProfile(){
@@ -81,6 +88,13 @@ export default class MainPresenter {
     render(this.#loadMoreButtonComponent, this.#filmsListSectionComponent.element);
   }
 
+  #clearFilmsList(){
+    this.#filmPresenters.forEach((presenter) => presenter.destroy());
+    this.#filmPresenters.clear();
+    this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
+    remove(this.#loadMoreButtonComponent);
+  }
+
   #renderFilmsList(){
     const minLengthPerStep = Math.min(this.#films.length, FILMS_COUNT_PER_STEP);
 
@@ -108,9 +122,11 @@ export default class MainPresenter {
 
     const filmPresenter = new FilmPresenter({
       filmsListContainer: filmsListContainer,
-      bodyElement: this.#body
+      bodyElement: this.#body,
+      onDataChange: this.#handleFilmChange,
     });
     filmPresenter.init(film, this.#comments);
+    this.#filmPresenters.set(film.id, filmPresenter);
   }
 
   #renderBoard(){

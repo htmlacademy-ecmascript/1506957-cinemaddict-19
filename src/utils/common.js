@@ -19,4 +19,8 @@ const getRandomIntegerWithDot = (min, max) => (Math.random() * (max - min) + min
 
 const renameSpacetoDashAndLowerCase = (str) => (str.replace(/ /g, '-')).toLowerCase();
 
-export {getRandomArrayElement, getRandomElementsArray, getRandomInteger, renameSpacetoDashAndLowerCase, getRandomIntegerWithDot};
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export {getRandomArrayElement, getRandomElementsArray, getRandomInteger, renameSpacetoDashAndLowerCase, getRandomIntegerWithDot, updateItem };
