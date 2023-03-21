@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createFilmCardViewTemplate(film){
-  const {filmInfo, userDetails, comments} = film;
+  const {filmInfo, userDetails: {watchlist, alreadyWatched, favorite}, comments} = film;
   const isActiveStatus = (status) => status ? 'film-card__controls-item--active' : '';
 
   return `
@@ -19,23 +19,20 @@ function createFilmCardViewTemplate(film){
         <span class="film-card__comments">${comments.length} comment${comments.length > 1 ? 's' : ''}</span>
       </a>
       <div class="film-card__controls">
-        <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${isActiveStatus(userDetails.watchlist)}" type="button">Add to watchlist</button>
-        <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${isActiveStatus(userDetails.alreadyWatched)}" type="button">Mark as watched</button>
-        <button class="film-card__controls-item film-card__controls-item--favorite ${isActiveStatus(userDetails.favorite)}" type="button">Mark as favorite</button>
+        <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${isActiveStatus(watchlist)}" type="button">Add to watchlist</button>
+        <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${isActiveStatus(alreadyWatched)}" type="button">Mark as watched</button>
+        <button class="film-card__controls-item film-card__controls-item--favorite ${isActiveStatus(favorite)}" type="button">Mark as favorite</button>
       </div>
     </article>
   `;
 }
 
 export default class FilmCardView extends AbstractView {
-  #element = null;
   #film = null;
-  #comments = null;
   #handleCardClick = null;
-  #handleOnChange;
-  #handleAddToWishlistClick;
-  #handleMarkAsWatchedClick;
-  #handleAddToFavourite;
+  #handleAddToWishlistClick = null;
+  #handleMarkAsWatchedClick = null;
+  #handleAddToFavourite = null;
 
   constructor({film, onCardClick, onAddToWishlistClick, onMarkAsWatchedClick, onAddToFavourite}) {
     super();
@@ -46,9 +43,10 @@ export default class FilmCardView extends AbstractView {
     this.#handleAddToFavourite = onAddToFavourite;
 
     this.element.querySelector('.film-card__link').addEventListener('click', this.#openPopupClickHandler);
-    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#handleAddToWishlistClick);
-    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#handleMarkAsWatchedClick);
-    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#handleAddToFavourite);
+
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#addToWishlistClickHandler);
+    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#markAsWatchedClickHandler);
+    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#addToFavouriteClickHandler);
   }
 
   get template(){
@@ -58,5 +56,20 @@ export default class FilmCardView extends AbstractView {
   #openPopupClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleCardClick();
+  };
+
+  #addToWishlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleAddToWishlistClick();
+  };
+
+  #markAsWatchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleMarkAsWatchedClick();
+  };
+
+  #addToFavouriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleAddToFavourite();
   };
 }

@@ -8,7 +8,6 @@ function createFilmStatisticsTemplate(){
 }
 
 export default class FilmsStatisticsView extends AbstractView {
-  #element = null;
 
   get template(){
     return createFilmStatisticsTemplate();

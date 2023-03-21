@@ -11,8 +11,9 @@ const renderFilmDetailsEmoji = COMMENT_EMOTION.map((emoji) =>
   </label>`).join('');
 
 function createPopupTemplate({film, comments}){
-  const {filmInfo} = film;
+  const {filmInfo, userDetails: {watchlist, alreadyWatched, favorite}} = film;
   const filmGenres = filmInfo.genre[0];
+  const isActiveButtonStatus = (status) => status ? 'film-details__control-button--active' : '';
 
   const renderComments = () => {
     const commentsTemplate = [];
@@ -101,9 +102,9 @@ function createPopupTemplate({film, comments}){
   </div>
 
   <section class="film-details__controls">
-    <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-    <button type="button" class="film-details__control-button film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-    <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+    <button type="button" class="film-details__control-button ${isActiveButtonStatus(watchlist)} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+    <button type="button" class="film-details__control-button ${isActiveButtonStatus(alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+    <button type="button" class="film-details__control-button ${isActiveButtonStatus(favorite)} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
   </section>
 </div>`;
 
@@ -136,8 +137,7 @@ function createPopupTemplate({film, comments}){
   `;
 }
 
-export default class PopupView extends AbstractView{
-  #element = null;
+export default class PopupView extends AbstractView {
   #film = null;
   #comments = null;
   #handlerClosePopup = null;

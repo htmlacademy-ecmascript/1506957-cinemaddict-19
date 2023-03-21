@@ -2,20 +2,29 @@ import { render, replace, remove } from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  POPUP: 'POPUP'
+};
 
 export default class FilmPresenter {
   #filmsListContainer = null;
   #bodyElement = null;
   #film = null;
   #comments = [];
+  #mode = Mode.DEFAULT;
+
   #filmCardComponent = null;
   #popupComponent = null;
-  #handleDataChange;
 
-  constructor({filmsListContainer, bodyElement, onDataChange}){
+  #handleDataChange = null;
+  #handleModeChange = null;
+
+  constructor({filmsListContainer, bodyElement, onDataChange, onModeChange}){
     this.#filmsListContainer = filmsListContainer;
     this.#bodyElement = bodyElement;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(film, comments){
@@ -25,10 +34,9 @@ export default class FilmPresenter {
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevPopupComponent = this.#popupComponent;
 
-    // console.log(this.#film, this.#comments)
     this.#filmCardComponent = new FilmCardView({
       film: this.#film,
-      onCardClick: this.#handlePopupClick(),
+      onCardClick: this.#handlePopupClick, /// Надо # ?
       onAddToWishlistClick: this.#handleAddToWishlistClick,
       onMarkAsWatchedClick: this.#handleMarkAsWatchedClick,
       onAddToFavourite: this.#handleAddToFavourite
@@ -37,7 +45,7 @@ export default class FilmPresenter {
     this.#popupComponent = new PopupView({
       film,
       comments: film.comments.map((commentId) => this.#comments[commentId]),
-      onEscClick: this.#handlePopupCloseButtonClick()
+      onEscClick: this.#handlePopupCloseButtonClick
     }
     );
 
@@ -46,11 +54,11 @@ export default class FilmPresenter {
       return;
     }
 
-    if (this.#filmsListContainer.contains(prevFilmCardComponent.element)){
+    if (this.#mode === Mode.DEFAULT){
       replace(this.#filmCardComponent, prevFilmCardComponent);
     }
 
-    if (this.#filmsListContainer.contains(prevPopupComponent.element)) {
+    if (this.#mode === Mode.POPUP) {
       replace(this.#popupComponent, prevPopupComponent);
     }
   }
@@ -60,16 +68,10 @@ export default class FilmPresenter {
     remove(this.#popupComponent);
   }
 
-  #handleAddToWishlistClick () {
-
-  }
-
-  #handleMarkAsWatchedClick(){
-
-  }
-
-  #handleAddToFavourite(){
-
+  resetView(){
+    if (this.mode !== Mode.DEFAULT){
+      this.#replacePopuptoCard();
+    }
   }
 
   #escKeyDownHandler = (evt) => {
@@ -80,23 +82,42 @@ export default class FilmPresenter {
     }
   };
 
-  #handlePopupCloseButtonClick (){
+  #handlePopupCloseButtonClick = () => {
     this.#replacePopuptoCard();
-  }
+  };
 
-  #handlePopupClick() {
+  #handlePopupClick = () => {
+    console.log('11')
     this.#replaceCardtoPopup();
-  }
+  };
 
   #replaceCardtoPopup() {
+    this.#bodyElement.classList.add('hide-overflow');
+    console.log(this.#popupComponent.element)
+    console.log(this.#bodyElement)
     this.#bodyElement.appendChild(this.#popupComponent.element);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#bodyElement.classList.add('hide-overflow');
+    this.#handleModeChange();
+    this.#mode = Mode.POPUP;
   }
 
   #replacePopuptoCard() {
+    this.#bodyElement.classList.remove('hide-overflow');
     this.#popupComponent.element.remove();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#bodyElement.classList.remove('hide-overflow');
+    this.#mode = Mode.DEFAULT;
   }
+
+  #handleAddToWishlistClick = () => {
+    this.#handleDataChange({...this.#film, userDetails: {...!this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+  };
+
+  #handleMarkAsWatchedClick = () => {
+    this.#handleDataChange({...this.#film, userDetails: {...!this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+  };
+
+  #handleAddToFavourite = () => {
+    this.#handleDataChange({...this.#film, userDetails: {...!this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+  };
+
 }

@@ -9,7 +9,6 @@ function createFilmsListSectionViewTemplate(isExtra, title){
 }
 
 export default class FilmsListSectionView extends AbstractView {
-  #element = null;
   #isExtra = null;
   #title = null;
 

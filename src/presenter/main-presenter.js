@@ -10,6 +10,8 @@ import FilmsListEmptyContainerView from '../view/films-list-empty-view.js';
 import { generateFilter } from '../mock/filters.js';
 import FilmPresenter from './film-presenter.js';
 import { updateItem } from '../utils/common.js';
+import { SortType } from '../const/const.js';
+import { sortByDate, sortByRating } from '../utils/sort.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -19,9 +21,11 @@ export default class MainPresenter {
   #filmsStatisticComponent = new FilmsStatisticsView();
   #filmsSectionComponent = new FilmsSectionView();
   #filmsListSectionComponent = new FilmsListSectionView();
-  #sortComponent = new SortView();
   #loadMoreButtonComponent;
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
+  #sortComponent = null;
+  #currentSortType = SortType.DEFAULT;
+  #sourcedBoardFilms = [];
   #header;
   #main;
   #footer;
@@ -43,6 +47,7 @@ export default class MainPresenter {
 
   init(){
     this.#films = [...this.#filmsModel.films];
+    this.#sourcedBoardFilms = [...this.#filmsModel.films];
     this.#comments = [...this.#commentsModel.comments];
     this.#renderBoard();
   }
@@ -52,13 +57,43 @@ export default class MainPresenter {
     this.#renderedFilmsCount += FILMS_COUNT_PER_STEP;
 
     if (this.#renderedFilmsCount >= this.#films.length) {
-      remove(this.#loadMoreButtonComponent.element);
+      remove(this.#loadMoreButtonComponent);
     }
   };
 
   #handleFilmChange = (updatedFilm) => {
     this.#films = updateItem(this.#films, updatedFilm);
-    this.#filmPresenters.get(updatedFilm.id).init(updatedFilm);
+    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms);
+    this.#filmPresenters.get(updatedFilm.id).init(updatedFilm, this.#comments);
+  };
+
+  #sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this.#films.sort(sortByDate);
+        break;
+      case SortType.RATING:
+        this.#films.sort(sortByRating);
+        break;
+      default:
+        this.#films = [...this.#sourcedBoardFilms]
+    }
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    console.log('change')
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
+    this.#clearFilmsList();
+    this.#renderFilmsList();
+  };
+
+  #handleModeChange = () => {
+    this.#filmPresenters.forEach((presenter) => presenter.resetView());
   };
 
   #renderProfile(){
@@ -66,6 +101,7 @@ export default class MainPresenter {
   }
 
   #renderSort(){
+    this.#sortComponent = new SortView(this.#handleSortTypeChange, this.#currentSortType);
     render(this.#sortComponent, this.#main);
   }
 
@@ -102,9 +138,7 @@ export default class MainPresenter {
     render(this.#filmsListSectionComponent, this.#filmsSectionComponent.element);
 
     for (let i = 0; i < minLengthPerStep; i++) {
-      // (console.log(this.#films))
-      this.#renderFilmCard(this.#films[i]); // здесь в косоли undefind??
-      // console.log(this.#renderFilmCard(this.#films[i]));
+      this.#renderFilmCard(this.#films[i]);
     }
     if (this.#films.length > FILMS_COUNT_PER_STEP) {
       this.#renderLoadMoreButton();
@@ -124,7 +158,9 @@ export default class MainPresenter {
       filmsListContainer: filmsListContainer,
       bodyElement: this.#body,
       onDataChange: this.#handleFilmChange,
+      onModeChange: this.#handleModeChange
     });
+
     filmPresenter.init(film, this.#comments);
     this.#filmPresenters.set(film.id, filmPresenter);
   }

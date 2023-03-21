@@ -8,7 +8,6 @@ function createLoadMoreButtonViewTemplate() {
 
 export default class LoadMoreButtonView extends AbstractView {
   #handlerClick = null;
-  #element = null;
 
   constructor({onClick}) {
     super();
