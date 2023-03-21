@@ -76,7 +76,7 @@ export default class MainPresenter {
         this.#films.sort(sortByRating);
         break;
       default:
-        this.#films = [...this.#sourcedBoardFilms]
+        this.#films = [...this.#sourcedBoardFilms];
     }
     this.#currentSortType = sortType;
   }
