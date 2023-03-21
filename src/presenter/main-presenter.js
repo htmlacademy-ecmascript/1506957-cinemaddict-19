@@ -82,7 +82,7 @@ export default class MainPresenter {
   }
 
   #handleSortTypeChange = (sortType) => {
-    console.log('change')
+    // console.log('change')
     if (this.#currentSortType === sortType) {
       return;
     }

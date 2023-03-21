@@ -87,14 +87,14 @@ export default class FilmPresenter {
   };
 
   #handlePopupClick = () => {
-    console.log('11')
+    // console.log('11')
     this.#replaceCardtoPopup();
   };
 
   #replaceCardtoPopup() {
     this.#bodyElement.classList.add('hide-overflow');
-    console.log(this.#popupComponent.element)
-    console.log(this.#bodyElement)
+    // console.log(this.#popupComponent.element)
+    // console.log(this.#bodyElement)
     this.#bodyElement.appendChild(this.#popupComponent.element);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
