@@ -61,12 +61,6 @@ export default class MainPresenter {
     }
   };
 
-  #handleFilmChange = (updatedFilm) => {
-    this.#films = updateItem(this.#films, updatedFilm);
-    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms);
-    this.#filmPresenters.get(updatedFilm.id).init(updatedFilm, this.#comments);
-  };
-
   #sortFilms(sortType) {
     switch (sortType) {
       case SortType.DATE:
@@ -82,7 +76,6 @@ export default class MainPresenter {
   }
 
   #handleSortTypeChange = (sortType) => {
-    // console.log('change')
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -90,6 +83,12 @@ export default class MainPresenter {
     this.#sortFilms(sortType);
     this.#clearFilmsList();
     this.#renderFilmsList();
+  };
+
+  #handleFilmChange = (updatedFilm) => {
+    this.#films = updateItem(this.#films, updatedFilm);
+    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms, updatedFilm);
+    this.#filmPresenters.get(updatedFilm.id).init(updatedFilm, this.#comments);
   };
 
   #handleModeChange = () => {
@@ -101,7 +100,7 @@ export default class MainPresenter {
   }
 
   #renderSort(){
-    this.#sortComponent = new SortView(this.#handleSortTypeChange, this.#currentSortType);
+    this.#sortComponent = new SortView(this.#handleSortTypeChange);
     render(this.#sortComponent, this.#main);
   }
 
@@ -148,21 +147,21 @@ export default class MainPresenter {
   #renderFilmsCards(from, to) {
     this.#films
       .slice(from, to)
-      .forEach((film) => this.#renderFilmCard(film)); // ????
+      .forEach((film) => this.#renderFilmCard(film));
   }
 
   #renderFilmCard(film) {
     const filmsListContainer = this.#filmsListSectionComponent.element.querySelector('.films-list__container');
 
-    const filmPresenter = new FilmPresenter({
+    const filmPresenters = new FilmPresenter({
       filmsListContainer: filmsListContainer,
       bodyElement: this.#body,
       onDataChange: this.#handleFilmChange,
       onModeChange: this.#handleModeChange
     });
 
-    filmPresenter.init(film, this.#comments);
-    this.#filmPresenters.set(film.id, filmPresenter);
+    filmPresenters.init(film, this.#comments);
+    this.#filmPresenters.set(film.id, filmPresenters);
   }
 
   #renderBoard(){

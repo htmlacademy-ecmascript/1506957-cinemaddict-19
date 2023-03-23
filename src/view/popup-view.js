@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import dayjs from 'dayjs';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-view.js';
 import { COMMENT_EMOTION } from '../const/const.js';
 import { getRandomReleaseDate } from '../utils/time.js';
 
@@ -137,7 +137,7 @@ function createPopupTemplate({film, comments}){
   `;
 }
 
-export default class PopupView extends AbstractView {
+export default class PopupView extends AbstractStatefulView {
   #film = null;
   #comments = null;
   #handlerClosePopup = null;
@@ -159,4 +159,9 @@ export default class PopupView extends AbstractView {
     this.#handlerClosePopup();
   };
 
+  static parseFilmToState(film) {
+    return {...film,
+      isFavorite: film
+    };
+  }
 }

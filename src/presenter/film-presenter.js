@@ -94,8 +94,9 @@ export default class FilmPresenter {
   #replaceCardtoPopup() {
     this.#bodyElement.classList.add('hide-overflow');
     // console.log(this.#popupComponent.element)
+    // console.log(this.#popupComponent)
     // console.log(this.#bodyElement)
-    this.#bodyElement.appendChild(this.#popupComponent.element);
+    this.#bodyElement.append(this.#popupComponent.element);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.POPUP;
@@ -103,21 +104,25 @@ export default class FilmPresenter {
 
   #replacePopuptoCard() {
     this.#bodyElement.classList.remove('hide-overflow');
-    this.#popupComponent.element.remove();
+    remove(this.#popupComponent.element);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   }
 
   #handleAddToWishlistClick = () => {
-    this.#handleDataChange({...this.#film, userDetails: {...!this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+    // this.#handleDataChange({...this.#task, isFavorite: !this.#task.isFavorite});
+    this.#film.userDetails.watchlist = !this.#film.userDetails.watchlist;
+    this.#handleDataChange(this.#film);
   };
 
   #handleMarkAsWatchedClick = () => {
-    this.#handleDataChange({...this.#film, userDetails: {...!this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+    this.#film.userDetails.alreadyWatched = !this.#film.userDetails.alreadyWatched;
+    this.#handleDataChange(this.#film);
   };
 
   #handleAddToFavourite = () => {
-    this.#handleDataChange({...this.#film, userDetails: {...!this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+    this.#film.userDetails.favorite = !this.#film.userDetails.favorite;
+    this.#handleDataChange(this.#film);
   };
 
 }
