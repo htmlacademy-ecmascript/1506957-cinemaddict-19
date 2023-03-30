@@ -16,7 +16,6 @@ const renderEmojisTemplate = (currentEmoji) => COMMENT_EMOTION.map((emoji) =>
 
 function createPopupTemplate({film, comments}){
   const {filmInfo, currentEmoji, commentInput, isOnWashlist, isOnWatched, isOnFavorite} = film;
-  console.log(film, film.userDetails.watchlist)
   const filmGenres = filmInfo.genre[0];
   const renderComments = () => {
     const commentsTemplate = [];
