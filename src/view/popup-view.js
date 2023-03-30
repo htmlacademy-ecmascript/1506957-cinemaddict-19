@@ -1,20 +1,23 @@
 /* eslint-disable no-unused-expressions */
 import dayjs from 'dayjs';
-import AbstractStatefulView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { COMMENT_EMOTION } from '../const/const.js';
-import { getRandomReleaseDate } from '../utils/time.js';
+import { getRandomReleaseDate, humanizeCommentDate } from '../utils/time.js';
 
-const renderFilmDetailsEmoji = COMMENT_EMOTION.map((emoji) =>
-  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+// eslint-disable-next-line no-undef
+const relativeTime = require('dayjs/plugin/relativeTime');
+dayjs.extend(relativeTime);
+
+const renderEmojisTemplate = (currentEmoji) => COMMENT_EMOTION.map((emoji) =>
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}${emoji === currentEmoji ? 'checked' : ''}">
   <label class="film-details__emoji-label" for="emoji-${emoji}">
   <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`).join('');
 
 function createPopupTemplate({film, comments}){
-  const {filmInfo, userDetails: {watchlist, alreadyWatched, favorite}} = film;
+  const {filmInfo, currentEmoji, commentInput, isOnWashlist, isOnWatched, isOnFavorite} = film;
+  console.log(film, film.userDetails.watchlist)
   const filmGenres = filmInfo.genre[0];
-  const isActiveButtonStatus = (status) => status ? 'film-details__control-button--active' : '';
-
   const renderComments = () => {
     const commentsTemplate = [];
     for (const commentID of film.comments) {
@@ -26,7 +29,7 @@ function createPopupTemplate({film, comments}){
         <p class="film-details__comment-text">${comments[commentID].comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comments[commentID].author}</span>
-          <span class="film-details__comment-day">${comments[commentID].date}</span>
+          <span class="film-details__comment-day">${(dayjs(humanizeCommentDate(comments[commentID].date, 'D MMMM YYYY')).fromNow())}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -80,7 +83,7 @@ function createPopupTemplate({film, comments}){
       </tr>
       <tr class="film-details__row">
       <td class="film-details__term">Release Date</td>
-      <td class="film-details__cell">${dayjs(getRandomReleaseDate()).format('DD MMMM YYYY')}</td>
+      <td class="film-details__cell">${dayjs(getRandomReleaseDate).format('DD MMMM YYYY')}</td>
       </tr>
       <tr class="film-details__row">
       <td class="film-details__term">Duration</td>
@@ -102,9 +105,9 @@ function createPopupTemplate({film, comments}){
   </div>
 
   <section class="film-details__controls">
-    <button type="button" class="film-details__control-button ${isActiveButtonStatus(watchlist)} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-    <button type="button" class="film-details__control-button ${isActiveButtonStatus(alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-    <button type="button" class="film-details__control-button ${isActiveButtonStatus(favorite)} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+    <button type="button" class="film-details__control-button ${isOnWashlist ? 'film-details__control-button--active' : ''} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+    <button type="button" class="film-details__control-button ${isOnWatched ? 'film-details__control-button--active' : ''} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+    <button type="button" class="film-details__control-button ${isOnFavorite ? 'film-details__control-button--active' : ''} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
   </section>
 </div>`;
 
@@ -115,14 +118,16 @@ function createPopupTemplate({film, comments}){
     </ul>
 
     <form class="film-details__new-comment" action="" method="get">
-      <div class="film-details__add-emoji-label"></div>
-
+      <div class="film-details__add-emoji-label">
+      ${currentEmoji ? `
+      <img src="images/emoji/${currentEmoji}.png" width="55" height="55" alt="emoji-${currentEmoji}">` : ''}
+      </div>
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentInput ? commentInput : ''}</textarea>
       </label>
 
       <div class="film-details__emoji-list">
-        ${renderFilmDetailsEmoji}
+        ${renderEmojisTemplate(currentEmoji)}
         </label>
       </div>
     </form>
@@ -138,30 +143,107 @@ function createPopupTemplate({film, comments}){
 }
 
 export default class PopupView extends AbstractStatefulView {
-  #film = null;
   #comments = null;
-  #handlerClosePopup = null;
+  #handleClosePopup = null;
 
   constructor({film, comments, onEscClick}){
     super();
-    this.#film = film;
+    this._setState(PopupView.parseFilmToState(film));
     this.#comments = comments;
-    this.#handlerClosePopup = onEscClick;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closePopupHandler);
+    this.#handleClosePopup = onEscClick;
+    this._restoreHandlers();
   }
 
   get template(){
-    return createPopupTemplate({film: this.#film, comments: this.#comments});
+    return createPopupTemplate({film: this._state, comments: this.#comments});
+  }
+
+  reset(commentInput){
+    this.updateElement(
+      PopupView.parseFilmToState(commentInput)
+    );
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closePopupHandler);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiChangeHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistClickHandler);
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedClickHandler);
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
   }
 
   #closePopupHandler = (evt) => {
     evt.preventDefault();
-    this.#handlerClosePopup();
+    this.#handleClosePopup(PopupView.parseFilmToState(this._state));
   };
+
+  #emojiChangeHandler = (evt) => {
+    evt.preventDefault();
+    // console.log('emoji')
+    this.updateElement({
+      ...this._state,
+      currentEmoji: evt.target.value,
+    });
+  };
+
+  #commentInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      commentInput: evt.target.value
+    });
+  };
+
+  #watchlistClickHandler = (evt) => {
+    // console.log('watchlist')
+    evt.preventDefault();
+    this.updateElement({
+      ...this._state,
+      isOnWashlist: !this._state.isOnWashlist
+    });
+  };
+
+  #watchedClickHandler = (evt) => {
+    // console.log('watched')
+    evt.preventDefault();
+    this.updateElement({
+      ...this._state,
+      isOnWatched: !this._state.isOnWatched
+    });
+  };
+
+  #favoriteClickHandler = (evt) => {
+    // console.log('favorite')
+    evt.preventDefault();
+    this.updateElement({
+      ...this._state,
+      isOnFavorite: !this._state.isOnFavorite
+    });
+  };
+
 
   static parseFilmToState(film) {
     return {...film,
-      isFavorite: film
+      currentEmoji: null,
+      commentInput: null,
+      isOnWashlist: film.userDetails.watchlist !== null,
+      isOnWatched: film.userDetails.alreadyWatched !== null,
+      isOnFavorite: film.userDetails.favorite !== null
     };
+  }
+
+  static parseStateToFilm(state) {
+    const film = {...state};
+
+    if (!film.isOnWashlist) {
+      film.userDetails.watchlist = null;
+    }
+
+    delete film.currentEmoji;
+    delete film.commentInput;
+    delete film.isOnWashlist;
+    delete film.isOnWatched;
+    delete film.isOnFavorite;
+    return film;
   }
 }

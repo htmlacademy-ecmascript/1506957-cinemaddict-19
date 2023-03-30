@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { getRandomArrayElement, getRandomElementsArray, getRandomInteger, getRandomIntegerWithDot } from '../utils/common.js';
-import { durationTime, getRandomReleaseTime, getRandomTime } from '../utils/time.js';
+import { durationTime, getRandomReleaseTime } from '../utils/time.js';
 import { FILM_TITLE, TOTAL_FILM_RATING_MIN, TOTAL_FILM_RATING_MAX, POSTERS, AGE_RATING, DICRECTOR_OF_FILM, WRITERS_OF_FILM, ACTORS_OF_FILM, RELEASE_COUNTRY, DURATION_TIME_MIN, DURATION_TIME_MAX, GENRES, DESCRIPTIONS, DESCRIPTION_LENGTH_MIN, DESCRIPTION_LENGTH_MAX } from './const/films-const.js';
 import { getCommentsIds } from './comments.js';
 
@@ -31,7 +31,7 @@ const createFilms = () => (
     'userDetails': {
       'watchlist': Boolean(getRandomInteger(0,1)),
       'alreadyWatched': Boolean(getRandomInteger(0,1)),
-      'watchingDate': getRandomTime(),
+      'watchingDate': getRandomReleaseTime(),
       'favorite': Boolean(getRandomInteger(0,1))
     }
   }
