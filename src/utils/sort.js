@@ -1,20 +1,29 @@
-// import dayjs from 'dayjs';
-// import { SortType } from '../const/const.js';
-// // eslint-disable-next-line no-undef
-// // const minMax = require('dayjs/plugin/minMax');
-// // dayjs.extend(minMax);
-// // const a = dayjs.max(dayjs(), dayjs('2018-01-01'), dayjs('2019-01-01'))
-// // console.log(a)
+import dayjs from 'dayjs';
 
-// function isTaskExpired(dueDate) {
-//   return dueDate && dayjs().isAfter(dueDate, 'D');
-// }
+function getWeightForNullDate(dateA, dateB) {
+  if (dateA === null && dateB === null) {
+    return 0;
+  }
 
-// const sort = {
-//   [SortType.DEFAULT]: (films) => films.filter((film) => film),
-//   [SortType.DATE]: (films) => films.filter((film) => isTaskExpired(film.filmInfo.release.date)),
-//   // [SortType.DATE]: (films) => films.filter((film) => dayjs.max(dayjs(), film)),
-//   [SortType.RATING]: (films) => films.filter((film) => film.filmInfo.totalRating),
-// };
+  if (dateA === null) {
+    return 1;
+  }
 
-// export { sort };
+  if (dateB === null) {
+    return -1;
+  }
+
+  return null;
+}
+
+function sortByDate(filmA, filmB) {
+  const weight = getWeightForNullDate(filmA.dueDate, filmB.dueDate);
+
+  return weight ?? dayjs(filmB.dueDate).diff(dayjs(filmA.dueDate));
+}
+
+function sortByRating(cardA, cardB) {
+  return cardB.filmInfo.totalRating - cardA.filmInfo.totalRating;
+}
+
+export {sortByDate, sortByRating};

@@ -1,7 +1,7 @@
 import { getRandomArrayElement } from '../utils/common';
 import { COMMENT_EMOTION } from '../const/const.js';
 import { AUTHORS, COMMENTS } from './const/comments-const.js';
-import { getRandomTime } from '../utils/time.js';
+import { getRandomReleaseTime } from '../utils/time.js';
 
 const COMMENTS_COUNT = 2;
 
@@ -9,7 +9,7 @@ const createComment = (index) => ( {
   'id': index.toString(),
   'author': getRandomArrayElement(AUTHORS),
   'comment': getRandomArrayElement(COMMENTS),
-  'date': getRandomTime(),
+  'date': getRandomReleaseTime(),
   'emotion': getRandomArrayElement(COMMENT_EMOTION)
 }
 );

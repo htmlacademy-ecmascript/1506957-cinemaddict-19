@@ -13,7 +13,6 @@ const mainPresenter = new MainPresenter({
   main: mainElement,
   footer: footerElement,
   body: bodyElement,
-  popupContainer: bodyElement,
   filmsModel,
   commentsModel
 });

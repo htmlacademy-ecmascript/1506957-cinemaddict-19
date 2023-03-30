@@ -1,6 +1,9 @@
-import { getRandomInteger } from './common.js';
+import dayjs from 'dayjs';
+import { getRandomInteger, getRandomArrayElement } from './common.js';
 
 const MINUTES_IN_ONE_HOUR = 60;
+
+const DATE = ['2019-05-11T00:00:00.000Z', '2018-06-10T00:00:00.000Z','2017-04-06T00:00:00.000Z','2022-01-10T00:00:00.000Z','2023-01-10T00:00:00.000Z'];
 
 const durationTime = (duration) => {
   const hours = Math.floor((duration) / MINUTES_IN_ONE_HOUR);
@@ -13,9 +16,9 @@ const durationTime = (duration) => {
   }
   return `${hours}H ${minutes}M`;
 };
-const getRandomReleaseDate = () =>`${getRandomInteger(2019, 2023)}-${getRandomInteger(1, 12)}-${getRandomInteger(1, 31)}`;
-const getRandomReleaseTime = () => `${getRandomReleaseDate()}+T${getRandomInteger(0, 23)}:${getRandomInteger(0,59)}:${getRandomInteger(0, 59)}.000Z`;
+const getRandomReleaseDate = `${getRandomInteger(2019, 2022)}-${getRandomInteger(1, 12)}-${getRandomInteger(1, 31)}`;
+const getRandomReleaseTime = () => `${getRandomArrayElement(DATE)}`;
 
-const getRandomTime = () => `${getRandomInteger(2019, 2023)}-${getRandomInteger(1, 12)}-${getRandomInteger(1, 31)}T${getRandomInteger(0, 23)}:${getRandomInteger(0,59)}:${getRandomInteger(0, 59)}.554Z`;
+const humanizeCommentDate = (commentDate) => commentDate ? dayjs(commentDate).format('YYYY MMMM DD HH:mm') : '';
 
-export { durationTime, getRandomTime, getRandomReleaseTime, getRandomReleaseDate};
+export { durationTime, getRandomReleaseTime, getRandomReleaseDate, humanizeCommentDate};
